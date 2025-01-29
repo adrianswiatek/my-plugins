@@ -1,21 +1,26 @@
-//
-//  ContentView.swift
-//  MyPlugins
-//
-//  Created by Adrian Świątek on 28/01/2025.
-//
-
+import AVFAudio
+import AudioUnit
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(PluginsFinder.self) private var pluginsFinder: PluginsFinder
+
+    @State private var plugins: [PluginsAggregate] = []
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        List(plugins) { plugin in
+            HStack {
+                Text(plugin.name)
+                Spacer()
+                Text(plugin.items.count, format: .number)
+            }
+            .listStyle(.bordered)
         }
-        .padding()
+        .onAppear {
+            plugins = pluginsFinder
+                .find(forTypes: PluginType.allCases)
+                .sorted { $0.name < $1.name }
+        }
     }
 }
 
