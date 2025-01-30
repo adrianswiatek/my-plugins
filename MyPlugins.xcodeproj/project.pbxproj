@@ -27,11 +27,6 @@
 			path = MyPlugins;
 			sourceTree = "<group>";
 		};
-		E899955B2D494BBF00842ADE /* MyPluginsTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = MyPluginsTests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,7 +51,6 @@
 			isa = PBXGroup;
 			children = (
 				E89995492D494BBE00842ADE /* MyPlugins */,
-				E899955B2D494BBF00842ADE /* MyPluginsTests */,
 				E89995482D494BBE00842ADE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -107,9 +101,6 @@
 			);
 			dependencies = (
 				E899955A2D494BBF00842ADE /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				E899955B2D494BBF00842ADE /* MyPluginsTests */,
 			);
 			name = MyPluginsTests;
 			packageProductDependencies = (

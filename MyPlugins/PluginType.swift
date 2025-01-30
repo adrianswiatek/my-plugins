@@ -24,7 +24,7 @@ enum PluginType: CaseIterable, CustomStringConvertible {
 
     var description: String {
         if case .audioUnit = self {
-            return "Audio Unit"
+            return "AU"
         }
         return fileSuffix.uppercased()
     }
