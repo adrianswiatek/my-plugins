@@ -33,3 +33,9 @@ enum PluginType: CaseIterable, CustomStringConvertible {
         PluginType.allCases.first { $0.fileSuffix == url.pathExtension }
     }
 }
+
+extension PluginType: Identifiable {
+    var id: PluginType {
+        self
+    }
+}
