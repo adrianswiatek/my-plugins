@@ -32,7 +32,7 @@ struct ContentView: View {
     private func findPlugins() {
         plugins = pluginsFinder
             .find(forTypes: PluginType.allCases)
-            .sorted { $0.name < $1.name }
+            .sorted(by: viewConfiguration.sortPlugins)
     }
 
 

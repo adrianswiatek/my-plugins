@@ -8,7 +8,8 @@ struct MyPluginsApp: App {
 
     private let viewConfiguration = ViewConfiguration(
         pluginTypes: [.audioUnit, .vst3, .vst, .clap],
-        listColumnWidth: 40.0
+        listColumnWidth: 40.0,
+        sortDirection: .ascending
     )
 
     var body: some Scene {
