@@ -17,10 +17,11 @@ struct MyPluginsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .frame(minWidth: 500, minHeight: 400)
+                .frame(minWidth: 800, minHeight: 400)
                 .environment(commands)
                 .environment(pluginsFinder)
                 .environment(viewConfiguration)
+                .navigationTitle("My Plugins")
         }
         .commands {
             CommandGroup(after: .newItem) {

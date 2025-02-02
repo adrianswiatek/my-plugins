@@ -9,20 +9,28 @@ struct ContentView: View {
     @State private var plugins: [PluginsAggregate] = []
     @State private var pluginNameToFilter: String = ""
     @State private var pluginTypeToFilter: PluginType?
+    @State private var selectedPlugin: PluginsAggregate?
 
     var filteredPlugins: [PluginsAggregate] {
         plugins.filter(canShowPluginBasedOnType).filter(canShowPluginBaseOnName)
     }
 
     var body: some View {
-        VStack {
-            PluginsListHeaderView(typeToFilter: $pluginTypeToFilter, nameToFilter: $pluginNameToFilter)
-                .padding(EdgeInsets(top: 6, leading: 16, bottom: 3, trailing: 16))
+        HStack {
+            VStack {
+                PluginsListHeaderView(typeToFilter: $pluginTypeToFilter, nameToFilter: $pluginNameToFilter)
+                    .padding(EdgeInsets(top: 6, leading: 16, bottom: 3, trailing: 16))
 
-            PluginsListView(plugins: filteredPlugins)
-                .padding(.top, -6)
+                PluginsListView(plugins: filteredPlugins, selectedPlugin: $selectedPlugin)
+                    .padding(.top, -6)
 
-            PluginsListFooterView(plugins: filteredPlugins)
+                PluginsListFooterView(plugins: filteredPlugins)
+            }
+
+            Divider()
+
+            InfoPanelView(for: $selectedPlugin)
+                .padding(EdgeInsets(top: 6, leading: 0, bottom: 20, trailing: 8))
         }
         .onAppear(perform: findPlugins)
     }

@@ -23,7 +23,7 @@ final class PluginsFinder {
     private func appendingToUrl(_ url: URL) -> (String) -> URL {
         { url.appendingPathComponent($0) }
     }
-
+ 
     private func pluginItems(from urls: [URL]) -> [PluginItem] {
         guard let firstUrl = urls.first else {
             return []

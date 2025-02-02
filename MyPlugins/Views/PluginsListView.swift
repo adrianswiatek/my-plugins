@@ -2,13 +2,14 @@ import SwiftUI
 
 struct PluginsListView: View {
     @Environment(ViewConfiguration.self) private var viewConfiguration
-
     @State private var pluginIdToHover: String?
+    @Binding private var selectedPlugin: PluginsAggregate?
 
     private let plugins: [PluginsAggregate]
 
-    init(plugins: [PluginsAggregate]) {
+    init(plugins: [PluginsAggregate], selectedPlugin: Binding<PluginsAggregate?>) {
         self.plugins = plugins
+        self._selectedPlugin = selectedPlugin
     }
 
     var body: some View {
@@ -24,6 +25,7 @@ struct PluginsListView: View {
             }
             .opacity(opacityForPlugin(plugin))
             .background(backgroundForPlugin(plugin))
+            .onTapGesture(perform: selectPlugin(plugin))
             .onHover(perform: highlightPlugin(plugin))
         }
     }
@@ -44,11 +46,15 @@ struct PluginsListView: View {
 
     @ViewBuilder
     private func backgroundForPlugin(_ plugin: PluginsAggregate) -> some View {
-        if pluginIdToHover == plugin.id {
-            LinearGradient(colors: [.pink.opacity(0.33), .clear], startPoint: .leading, endPoint: .trailing)
+        let linearGradientForColor: (Color) -> some View = {
+            LinearGradient(colors: [$0, .clear], startPoint: .leading, endPoint: .trailing)
                 .padding(.vertical, -4)
-        } else {
-            Color.clear
+        }
+
+        if isPluginHovered(plugin) {
+            linearGradientForColor(.pink.opacity(0.33))
+        } else if isPluginSelected(plugin) {
+            linearGradientForColor(.pink.opacity(0.22))
         }
     }
 
@@ -56,7 +62,19 @@ struct PluginsListView: View {
         { pluginIdToHover = $0 ? plugin.id : nil }
     }
 
+    private func selectPlugin(_ plugin: PluginsAggregate) -> () -> Void {
+        { withAnimation { selectedPlugin = plugin } }
+    }
+
     private func opacityForPlugin(_ plugin: PluginsAggregate) -> Double {
-        pluginIdToHover == plugin.id ? 1.0 : 0.66
+        isPluginHovered(plugin) || isPluginSelected(plugin) ? 1.0 : 0.75
+    }
+
+    private func isPluginSelected(_ plugin: PluginsAggregate) -> Bool {
+        plugin.id == selectedPlugin?.id
+    }
+
+    private func isPluginHovered(_ plugin: PluginsAggregate) -> Bool {
+        plugin.id == pluginIdToHover
     }
 }
