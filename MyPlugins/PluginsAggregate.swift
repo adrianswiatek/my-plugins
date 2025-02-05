@@ -1,6 +1,6 @@
 import Foundation
 
-struct PluginsAggregate: Identifiable {
+struct PluginsAggregate: Hashable, Identifiable {
     let name: String
     let items: [PluginItem]
 

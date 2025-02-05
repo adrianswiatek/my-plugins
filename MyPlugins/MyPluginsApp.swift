@@ -12,7 +12,8 @@ struct MyPluginsApp: App {
         sortDirection: .ascending
     )
 
-    private let commands: Commands = Commands()
+    private let commands = Commands()
+    private let audioUnitService = AudioUnitService()
 
     var body: some Scene {
         WindowGroup {
@@ -21,6 +22,7 @@ struct MyPluginsApp: App {
                 .environment(commands)
                 .environment(pluginsFinder)
                 .environment(viewConfiguration)
+                .environment(audioUnitService)
                 .navigationTitle("My Plugins")
         }
         .commands {

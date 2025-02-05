@@ -52,9 +52,9 @@ struct PluginsListView: View {
         }
 
         if isPluginHovered(plugin) {
-            linearGradientForColor(.pink.opacity(0.33))
+            linearGradientForColor(.pink.opacity(0.35))
         } else if isPluginSelected(plugin) {
-            linearGradientForColor(.pink.opacity(0.22))
+            linearGradientForColor(.pink.opacity(0.20))
         }
     }
 
