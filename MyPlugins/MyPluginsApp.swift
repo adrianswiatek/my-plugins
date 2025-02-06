@@ -19,10 +19,10 @@ struct MyPluginsApp: App {
         WindowGroup {
             ContentView()
                 .frame(minWidth: 800, minHeight: 400)
+                .environment(audioUnitService)
                 .environment(commands)
                 .environment(pluginsFinder)
                 .environment(viewConfiguration)
-                .environment(audioUnitService)
                 .navigationTitle("My Plugins")
         }
         .commands {
