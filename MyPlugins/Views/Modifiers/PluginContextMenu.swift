@@ -17,6 +17,9 @@ struct PluginContextMenu: ViewModifier {
     private func copyUrlToClipboard() {
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(url.relativePath, forType: .string)
+
+        let bundle = Bundle(url: url)
+        let version = bundle?.infoDictionary?["CFBundleShortVersionString"] ?? "[n/a]"
     }
 
     private func showInFinder() {

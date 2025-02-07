@@ -32,8 +32,6 @@ struct InfoPanelView: View {
                         pluginManufacturerSection(plugin)
                         Divider()
                         pluginTypesSection(plugin)
-                        Divider()
-                        pluginPathsSection(plugin)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(EdgeInsets(top: 0, leading: 16, bottom: 2, trailing: 16))
@@ -50,7 +48,7 @@ struct InfoPanelView: View {
 
             Spacer()
         }
-        .frame(width: 275)
+        .frame(width: 300)
     }
 
     private func closeButton() -> some View {
@@ -91,49 +89,22 @@ struct InfoPanelView: View {
                 .foregroundStyle(.secondary)
                 .padding(.bottom, 1)
 
-            Text(sortedTypes(in: plugin).map(\.description), format: .list(type: .and))
-        }
-    }
-
-    private func pluginPathsSection(_ plugin: PluginsAggregate) -> some View {
-        VStack(alignment: .leading) {
-            Text("Paths")
-                .foregroundStyle(.secondary)
-                .padding(.bottom, 1)
-
             TabView {
                 ForEach(sortedItems(in: plugin), id: \.url) { pluginItem in
                     Tab {
-                        Text(pluginItem.url.relativePath)
-                            .font(.system(size: 12, design: .monospaced))
-                            .foregroundStyle(hoveredPluginItem == pluginItem ? Color.primary.opacity(0.85) : .secondary)
-                            .lineLimit(2)
-                            .truncationMode(.middle)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(8)
-                            .onHover { isHovered in
-                                withAnimation {
-                                    hoveredPluginItem = isHovered ? pluginItem : nil
-                                }
-                            }
-                            .contextMenuForPlugin(pluginItem)
-                            .help(pluginItem.url.relativePath)
+                        TypeTabView(pluginItem: pluginItem, hoveredPluginPath: $hoveredPluginItem)
                     } label: {
                         Text(pluginItem.type.description)
                     }
                 }
             }
             .tabViewStyle(.grouped)
-            .frame(height: 80)
+            .fixedSize(horizontal: false, vertical: true)
         }
     }
 
-    private func sortedTypes(in plugin: PluginsAggregate) -> [PluginType] {
-        viewConfiguration.pluginTypes.reduce([PluginType]()) { plugin.has($1) ? $0 + [$1] : $0 }
-    }
-
     private func sortedItems(in plugin: PluginsAggregate) -> [PluginItem] {
-        sortedTypes(in: plugin).compactMap { pluginType in
+        viewConfiguration.pluginTypes.compactMap { pluginType in
             plugin.items.first { $0.type == pluginType }
         }
     }
