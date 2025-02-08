@@ -2,13 +2,13 @@ import SwiftUI
 
 extension InfoPanelView {
     struct TypeTabView: View {
-        @Binding private var hoveredPluginPath: PluginItem?
+        @Binding private var hoveredUrl: URL?
 
-        private let pluginItem: PluginItem
+        private let url: URL
 
-        init (pluginItem: PluginItem, hoveredPluginPath: Binding<PluginItem?>) {
-            self.pluginItem = pluginItem
-            self._hoveredPluginPath = hoveredPluginPath
+        init (url: URL, hoveredUrl: Binding<URL?>) {
+            self.url = url
+            self._hoveredUrl = hoveredUrl
         }
 
         var body: some View {
@@ -22,39 +22,22 @@ extension InfoPanelView {
 
         private func pluginVersionSection() -> some View {
             VStack(alignment: .leading) {
-                Text("Version")
-                    .foregroundStyle(.secondary)
-                    .padding(.bottom, 1)
-
-                Text(pluginVersions())
+                SectionText(.title("Version"))
+                SectionText(.value(pluginVersions()))
             }
             .padding(4)
         }
 
         private func pluginPathSection() -> some View {
             VStack(alignment: .leading) {
-                Text("Path")
-                    .foregroundStyle(.secondary)
-                    .padding(.bottom, 1)
-
-                Text(pluginItem.url.relativePath)
-                    .font(.system(size: 12, design: .monospaced))
-                    .opacity(hoveredPluginPath == pluginItem ? 1 : 0.75)
-                    .lineLimit(2)
-                    .truncationMode(.middle)
-                    .contextMenuForPlugin(pluginItem)
-                    .help(pluginItem.url.relativePath)
-                    .onHover { isHovered in
-                        withAnimation {
-                            hoveredPluginPath = isHovered ? pluginItem : nil
-                        }
-                    }
+                SectionText(.title("Path"))
+                SectionText(.url(url, hoveredUrl: $hoveredUrl))
             }
             .padding(4)
         }
 
         private func pluginVersions() -> String {
-            let bundle = Bundle(url: pluginItem.url)
+            let bundle = Bundle(url: url)
             let infoDictionary = bundle?.infoDictionary
             let bundleVersion = infoDictionary?["CFBundleVersion"] as? String
             let bundleShortVersion = infoDictionary?["CFBundleShortVersionString"] as? String

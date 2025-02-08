@@ -18,7 +18,7 @@ struct MyPluginsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .frame(minWidth: 850, minHeight: 400)
+                .frame(minWidth: 1000, minHeight: 500)
                 .environment(audioUnitService)
                 .environment(commands)
                 .environment(pluginsFinder)
