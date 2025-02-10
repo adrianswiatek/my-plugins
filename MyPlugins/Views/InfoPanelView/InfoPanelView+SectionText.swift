@@ -46,7 +46,7 @@ extension InfoPanelView.SectionText {
         var body: some View {
             Text(url.relativePath)
                 .font(.system(size: 12, design: .monospaced))
-                .fontWeight(hoveredUrl == url ? .bold : .regular)
+                .fontWeight(hoveredUrl == url ? .medium : .light)
                 .opacity(hoveredUrl == url ? 1 : 0.9)
                 .lineLimit(1)
                 .truncationMode(.middle)

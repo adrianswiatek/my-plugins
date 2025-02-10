@@ -31,5 +31,10 @@ struct MyPluginsApp: App {
                     .keyboardShortcut("f", modifiers: .command)
             }
         }
+
+        Window("What's new", id: "whats-new") {
+            Text("New in this version ...")
+        }
+        .windowLevel(.floating)
     }
 }

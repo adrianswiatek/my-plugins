@@ -33,8 +33,9 @@ struct InfoPanelView: View {
                                 Divider()
                                 pluginManufacturerSection(plugin)
                                 Divider()
-                                pluginTypesSection(plugin)
-                                customPluginPaths(plugin)
+                                TypesSection(plugin, hoveredUrl: $hoveredUrl)
+                                    .padding(.bottom, 8)
+                                CustomPathsSection(plugin, hoveredUrl: $hoveredUrl)
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.vertical, 2)
@@ -82,85 +83,5 @@ struct InfoPanelView: View {
             SectionText(.title("Manufacturer"))
             SectionText(.value(audioUnitService.findManufacturerOfPlugin(plugin) ?? "[n/a]"))
         }
-    }
-
-    private func pluginTypesSection(_ plugin: PluginsAggregate) -> some View {
-        VStack(alignment: .leading) {
-            SectionText(.title("Types"))
-
-            TabView {
-                ForEach(sortedItems(in: plugin), id: \.url) { pluginItem in
-                    Tab {
-                        TypeTabView(url: pluginItem.url, hoveredUrl: $hoveredUrl)
-                    } label: {
-                        Text(pluginItem.type.description)
-                    }
-                }
-            }
-            .tabViewStyle(.grouped)
-            .fixedSize(horizontal: false, vertical: true)
-        }
-    }
-
-    private func sortedItems(in plugin: PluginsAggregate) -> [PluginItem] {
-        viewConfiguration.pluginTypes.compactMap { pluginType in
-            plugin.items.first { $0.type == pluginType }
-        }
-    }
-
-    private func customPluginPaths(_ plugin: PluginsAggregate) -> some View {
-        VStack(alignment: .leading) {
-            HStack {
-                Text("CUSTOM PATHS")
-                    .foregroundStyle(.secondary)
-
-                Spacer()
-
-                Group {
-                    if plugin.items.count > 1 {
-                        Button {
-
-                        } label: {
-                            Image(systemName: "pencil")
-                        }
-
-                    }
-
-                    Button {
-
-                    } label: {
-                        Image(systemName: "plus")
-                    }
-                }
-                .buttonStyle(.accessoryBar)
-                .foregroundStyle(.secondary)
-            }
-            .padding(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
-            .background(
-                RoundedRectangle(cornerRadius: 6)
-                    .fill(.pink.opacity(0.05))
-            )
-            .padding(.bottom, 8)
-
-            ForEach(plugin.items, id: \.url) { pluginItem in
-                VStack(alignment: .leading) {
-                    SectionText(.title(pluginItem.type.description))
-                    SectionText(.url(pluginItem.url, hoveredUrl: $hoveredUrl))
-                }
-
-                if pluginItem != plugin.items.last {
-                    Divider()
-                }
-            }
-            .padding(.horizontal)
-            .padding(.vertical, 2)
-        }
-        .padding(.bottom)
-        .background(
-            RoundedRectangle(cornerRadius: 6)
-                .fill(.pink.opacity(0.02))
-                .strokeBorder(Color.pink.opacity(0.05), lineWidth: 0.75)
-        )
-        .padding(.top, 4)
     }
 }
