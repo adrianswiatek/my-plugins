@@ -3,12 +3,14 @@ import SwiftUI
 
 extension InfoPanelView {
     struct CustomPathsSection: View {
+        @Environment(\.modelContext) private var modelContext
+
+        @State private var hoveredPath: PluginPath?
         @State private var isAddingShown: Bool = false
-        @State private var isEditingShown: Bool = false
 
         @Binding private var hoveredUrl: URL?
 
-        @Query private var pathModels: [PluginPath]
+        @Query(animation: .easeInOut) private var pathModels: [PluginPath]
 
         var paths: [PluginPath] {
             pathModels
@@ -31,14 +33,7 @@ extension InfoPanelView {
 
                     Spacer()
 
-                    if !paths.isEmpty {
-                        button(systemImage: "pencil", action: {})
-                    }
-
-                    button(systemImage: "plus", action: {
-                        isAddingShown.toggle() }
-                    )
-
+                    button(systemImage: "plus", action: toggle($isAddingShown))
                 }
                 .padding(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
                 .background(
@@ -49,8 +44,32 @@ extension InfoPanelView {
 
                 ForEach(paths) { path in
                     VStack(alignment: .leading) {
-                        SectionText(.title(path.name))
+                        HStack {
+                            SectionText(.title(path.name))
+
+                            Spacer()
+
+                            if path == hoveredPath {
+                                HStack(spacing: 4) {
+                                    Button(action: {}) {
+                                        Image(systemName: "pencil")
+                                    }
+                                    .buttonStyle(.accessoryBar)
+
+                                    Button(action: deleteHoveredPath) {
+                                        Image(systemName: "trash")
+                                    }
+                                    .buttonStyle(.accessoryBar)
+                                }
+                                .offset(x: 8)
+                            }
+                        }
+                        .frame(height: 24)
+
                         SectionText(.url(path.url, hoveredUrl: $hoveredUrl))
+                    }
+                    .onHover {
+                        hoveredPath = $0 ? path : nil
                     }
 
                     if path != paths.last {
@@ -77,6 +96,12 @@ extension InfoPanelView {
             }
             .buttonStyle(.accessoryBar)
             .foregroundStyle(.secondary)
+        }
+
+        private func deleteHoveredPath() {
+            if let hoveredPath {
+                modelContext.delete(hoveredPath)
+            }
         }
     }
 }

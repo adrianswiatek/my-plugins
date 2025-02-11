@@ -75,7 +75,7 @@ extension InfoPanelView {
             .frame(width: 450)
             .fileImporter(isPresented: $isFileImporterShown, allowedContentTypes: [.directory]) {
                 if case .success(let url) = $0 {
-                    path = url.path()
+                    path = url.path(percentEncoded: false)
                 }
             }
         }
@@ -152,10 +152,6 @@ extension InfoPanelView {
                     )
                 )
             }
-        }
-
-        private func toggle(_ binding: Binding<Bool>) -> () -> Void {
-            { binding.wrappedValue.toggle() }
         }
     }
 }

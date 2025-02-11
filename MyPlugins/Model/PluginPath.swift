@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class PluginPath {
+final class PluginPath: Identifiable {
     var name: String
     var url: URL
     var pluginId: String
