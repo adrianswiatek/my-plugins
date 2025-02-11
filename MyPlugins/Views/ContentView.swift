@@ -6,12 +6,12 @@ struct ContentView: View {
     @Environment(PluginsFinder.self) private var pluginsFinder
     @Environment(ViewConfiguration.self) private var viewConfiguration
 
-    @State private var plugins: [PluginsAggregate] = []
+    @State private var plugins: [Plugin] = []
     @State private var pluginNameToFilter: String = ""
     @State private var pluginTypeToFilter: PluginType?
-    @State private var selectedPlugin: PluginsAggregate?
+    @State private var selectedPlugin: Plugin?
 
-    var filteredPlugins: [PluginsAggregate] {
+    var filteredPlugins: [Plugin] {
         plugins.filter(canShowPluginBasedOnType).filter(canShowPluginBaseOnName)
     }
 
@@ -41,11 +41,11 @@ struct ContentView: View {
             .sorted(by: viewConfiguration.sortPlugins)
     }
 
-    private func canShowPluginBasedOnType(_ plugin: PluginsAggregate) -> Bool {
+    private func canShowPluginBasedOnType(_ plugin: Plugin) -> Bool {
         pluginTypeToFilter.map { plugin.has($0) } ?? true
     }
 
-    private func canShowPluginBaseOnName(_ plugin: PluginsAggregate) -> Bool {
+    private func canShowPluginBaseOnName(_ plugin: Plugin) -> Bool {
         pluginNameToFilter.isEmpty || plugin.name.localizedCaseInsensitiveContains(pluginNameToFilter)
     }
 }

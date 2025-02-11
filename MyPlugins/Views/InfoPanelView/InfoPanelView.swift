@@ -6,9 +6,9 @@ struct InfoPanelView: View {
 
     @State private var hoveredUrl: URL?
 
-    @Binding private var plugin: PluginsAggregate?
+    @Binding private var plugin: Plugin?
 
-    init(for plugin: Binding<PluginsAggregate?>) {
+    init(for plugin: Binding<Plugin?>) {
         self._plugin = plugin
     }
 
@@ -71,14 +71,14 @@ struct InfoPanelView: View {
         .padding(EdgeInsets(top: 16, leading: 0, bottom: 0, trailing: 16))
     }
 
-    private func pluginNameSection(_ plugin: PluginsAggregate) -> some View {
+    private func pluginNameSection(_ plugin: Plugin) -> some View {
         VStack(alignment: .leading) {
             SectionText(.title("Name"))
             SectionText(.value(plugin.name))
         }
     }
 
-    private func pluginManufacturerSection(_ plugin: PluginsAggregate) -> some View {
+    private func pluginManufacturerSection(_ plugin: Plugin) -> some View {
         VStack(alignment: .leading) {
             SectionText(.title("Manufacturer"))
             SectionText(.value(audioUnitService.findManufacturerOfPlugin(plugin) ?? "[n/a]"))

@@ -3,9 +3,9 @@ import SwiftUI
 struct PluginsListFooterView: View {
     @Environment(ViewConfiguration.self) private var viewConfiguration
 
-    private let plugins: [PluginsAggregate]
+    private let plugins: [Plugin]
 
-    init(plugins: [PluginsAggregate]) {
+    init(plugins: [Plugin]) {
         self.plugins = plugins
     }
 

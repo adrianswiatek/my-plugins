@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 extension InfoPanelView {
@@ -7,13 +8,19 @@ extension InfoPanelView {
 
         @Binding private var hoveredUrl: URL?
 
-        private let plugin: PluginsAggregate
-        private let pluginPaths: [PluginPath]
+        @Query private var pathModels: [PluginPath]
 
-        init(_ plugin: PluginsAggregate, hoveredUrl: Binding<URL?>) {
+        var paths: [PluginPath] {
+            pathModels
+                .filter { $0.pluginId == plugin.id }
+                .sorted { $0.name < $1.name }
+        }
+
+        private let plugin: Plugin
+
+        init(_ plugin: Plugin, hoveredUrl: Binding<URL?>) {
             self.plugin = plugin
             self._hoveredUrl = hoveredUrl
-            self.pluginPaths = PluginPathsProvider.provide()
         }
 
         var body: some View {
@@ -24,7 +31,7 @@ extension InfoPanelView {
 
                     Spacer()
 
-                    if pluginPaths.count > 1 {
+                    if !paths.isEmpty {
                         button(systemImage: "pencil", action: {})
                     }
 
@@ -40,13 +47,13 @@ extension InfoPanelView {
                 )
                 .padding(.bottom, 8)
 
-                ForEach(PluginPathsProvider.provide()) { pluginPath in
+                ForEach(paths) { path in
                     VStack(alignment: .leading) {
-                        SectionText(.title(pluginPath.name))
-                        SectionText(.url(pluginPath.url, hoveredUrl: $hoveredUrl))
+                        SectionText(.title(path.name))
+                        SectionText(.url(path.url, hoveredUrl: $hoveredUrl))
                     }
 
-                    if pluginPath != PluginPathsProvider.provide().last {
+                    if path != paths.last {
                         Divider()
                     }
                 }
@@ -60,7 +67,7 @@ extension InfoPanelView {
                     .strokeBorder(Color.pink.opacity(0.05), lineWidth: 0.75)
             )
             .sheet(isPresented: $isAddingShown) {
-                AddCustomPathView(isShown: $isAddingShown)
+                AddCustomPathView(plugin: plugin, isShown: $isAddingShown)
             }
         }
 

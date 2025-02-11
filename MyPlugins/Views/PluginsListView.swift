@@ -3,11 +3,11 @@ import SwiftUI
 struct PluginsListView: View {
     @Environment(ViewConfiguration.self) private var viewConfiguration
     @State private var pluginIdToHover: String?
-    @Binding private var selectedPlugin: PluginsAggregate?
+    @Binding private var selectedPlugin: Plugin?
 
-    private let plugins: [PluginsAggregate]
+    private let plugins: [Plugin]
 
-    init(plugins: [PluginsAggregate], selectedPlugin: Binding<PluginsAggregate?>) {
+    init(plugins: [Plugin], selectedPlugin: Binding<Plugin?>) {
         self.plugins = plugins
         self._selectedPlugin = selectedPlugin
     }
@@ -31,7 +31,7 @@ struct PluginsListView: View {
     }
 
     @ViewBuilder
-    private func viewForPlugin(_ plugin: PluginsAggregate, ofType pluginType: PluginType) -> some View {
+    private func viewForPlugin(_ plugin: Plugin, ofType pluginType: PluginType) -> some View {
         if plugin.has(pluginType) {
             Image(systemName: "checkmark")
                 .foregroundStyle(.green)
@@ -45,7 +45,7 @@ struct PluginsListView: View {
     }
 
     @ViewBuilder
-    private func backgroundForPlugin(_ plugin: PluginsAggregate) -> some View {
+    private func backgroundForPlugin(_ plugin: Plugin) -> some View {
         let linearGradientForColor: (Color) -> some View = {
             LinearGradient(colors: [$0, .clear], startPoint: .leading, endPoint: .trailing)
                 .padding(.vertical, -4)
@@ -58,23 +58,23 @@ struct PluginsListView: View {
         }
     }
 
-    private func highlightPlugin(_ plugin: PluginsAggregate) -> (Bool) -> Void {
+    private func highlightPlugin(_ plugin: Plugin) -> (Bool) -> Void {
         { pluginIdToHover = $0 ? plugin.id : nil }
     }
 
-    private func selectPlugin(_ plugin: PluginsAggregate) -> () -> Void {
+    private func selectPlugin(_ plugin: Plugin) -> () -> Void {
         { withAnimation { selectedPlugin = plugin } }
     }
 
-    private func opacityForPlugin(_ plugin: PluginsAggregate) -> Double {
+    private func opacityForPlugin(_ plugin: Plugin) -> Double {
         isPluginHovered(plugin) || isPluginSelected(plugin) ? 1.0 : 0.75
     }
 
-    private func isPluginSelected(_ plugin: PluginsAggregate) -> Bool {
+    private func isPluginSelected(_ plugin: Plugin) -> Bool {
         plugin.id == selectedPlugin?.id
     }
 
-    private func isPluginHovered(_ plugin: PluginsAggregate) -> Bool {
+    private func isPluginHovered(_ plugin: Plugin) -> Bool {
         plugin.id == pluginIdToHover
     }
 }

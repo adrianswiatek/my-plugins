@@ -21,12 +21,12 @@ final class AudioUnitService {
         }
     }
 
-    func findManufacturerOfPlugin(_ plugin: PluginsAggregate) -> String? {
+    func findManufacturerOfPlugin(_ plugin: Plugin) -> String? {
         let component = componentByName(of: plugin) ?? componentByUrl(of: plugin)
         return component?.manufacturerName
     }
 
-    private func componentByName(of plugin: PluginsAggregate) -> AVAudioUnitComponent? {
+    private func componentByName(of plugin: Plugin) -> AVAudioUnitComponent? {
         let preparedToCompare: (String) -> String = { string in
             string
                 .replacingOccurrences(of: " ", with: "")
@@ -39,7 +39,7 @@ final class AudioUnitService {
         }
     }
 
-    private func componentByUrl(of plugin: PluginsAggregate) -> AVAudioUnitComponent? {
+    private func componentByUrl(of plugin: Plugin) -> AVAudioUnitComponent? {
         allAudioUnitComponents.first { $0.componentURL == plugin.url(forType: .audioUnit) }
     }
 }

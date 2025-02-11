@@ -8,7 +8,7 @@ final class PluginsFinder {
         self.fileManager = fileManager
     }
 
-    func find(forTypes pluginTypes: [PluginType]) -> [PluginsAggregate] {
+    func find(forTypes pluginTypes: [PluginType]) -> [Plugin] {
         let libraryUrls = fileManager.urls(for: .libraryDirectory, in: .localDomainMask)
         let pluginsPath = "Audio/Plug-Ins"
 
@@ -17,7 +17,7 @@ final class PluginsFinder {
             .map { pluginTypes.map(\.directoryName).map(appendingToUrl($0)) }
             .orEmpty()
 
-        return pluginsAggregates(from: pluginItems(from: directoriesUrls))
+        return plugins(from: pluginItems(from: directoriesUrls))
     }
 
     private func appendingToUrl(_ url: URL) -> (String) -> URL {
@@ -44,7 +44,7 @@ final class PluginsFinder {
         url.pathExtension.isEmpty
     }
 
-    private func pluginsAggregates(from pluginItems: [PluginItem]) -> [PluginsAggregate] {
-        Dictionary(grouping: pluginItems, by: \.name).map(PluginsAggregate.init)
+    private func plugins(from pluginItems: [PluginItem]) -> [Plugin] {
+        Dictionary(grouping: pluginItems, by: \.name).map(Plugin.init)
     }
 }

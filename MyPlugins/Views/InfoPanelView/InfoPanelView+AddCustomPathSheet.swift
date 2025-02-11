@@ -1,7 +1,10 @@
+import SwiftData
 import SwiftUI
 
 extension InfoPanelView {
     struct AddCustomPathView: View {
+        @Environment(\.modelContext) private var modelContext
+
         @State private var isFileImporterShown: Bool
         @State private var isListOfCustomNamesShown: Bool
 
@@ -22,7 +25,10 @@ extension InfoPanelView {
             isPathValid ? URL(filePath: path) : nil
         }
 
-        init(isShown: Binding<Bool>) {
+        private let plugin: Plugin
+
+        init(plugin: Plugin, isShown: Binding<Bool>) {
+            self.plugin = plugin
             self._isShown = isShown
 
             self.isFileImporterShown = false
@@ -55,7 +61,7 @@ extension InfoPanelView {
                     Spacer()
 
                     Button {
-                        // Persist added Name and Path
+                        insertCustomPath()
                         isShown.toggle()
                     } label: {
                         Text("Add")
@@ -136,12 +142,20 @@ extension InfoPanelView {
             .buttonStyle(.accessoryBar)
         }
 
-        func toggle(_ binding: Binding<Bool>) -> () -> Void {
+        private func insertCustomPath() {
+            withAnimation {
+                modelContext.insert(
+                    PluginPath(
+                        name: name,
+                        url: URL(filePath: path),
+                        pluginId: plugin.id
+                    )
+                )
+            }
+        }
+
+        private func toggle(_ binding: Binding<Bool>) -> () -> Void {
             { binding.wrappedValue.toggle() }
         }
     }
-}
-
-#Preview {
-    InfoPanelView.AddCustomPathView(isShown: .constant(true))
 }

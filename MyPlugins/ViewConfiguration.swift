@@ -14,7 +14,7 @@ final class ViewConfiguration {
         self.sortDirection = sortDirection
     }
 
-    func sortPlugins(firstPlugin: PluginsAggregate, secondPlugin: PluginsAggregate) -> Bool {
+    func sortPlugins(firstPlugin: Plugin, secondPlugin: Plugin) -> Bool {
         firstPlugin.name.caseInsensitiveCompare(secondPlugin.name) == sortDirection.asComparisonResult
     }
 }

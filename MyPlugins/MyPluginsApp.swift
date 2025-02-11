@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 @main
@@ -23,6 +24,7 @@ struct MyPluginsApp: App {
                 .environment(commands)
                 .environment(pluginsFinder)
                 .environment(viewConfiguration)
+                .modelContainer(for: [PluginPath.self], inMemory: true)
                 .navigationTitle("My Plugins")
         }
         .commands {

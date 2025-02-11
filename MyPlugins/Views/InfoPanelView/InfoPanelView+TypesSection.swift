@@ -6,9 +6,9 @@ extension InfoPanelView {
 
         @Binding var hoveredUrl: URL?
 
-        private let plugin: PluginsAggregate
+        private let plugin: Plugin
 
-        init(_ plugin: PluginsAggregate, hoveredUrl: Binding<URL?>) {
+        init(_ plugin: Plugin, hoveredUrl: Binding<URL?>) {
             self.plugin = plugin
             self._hoveredUrl = hoveredUrl
         }
