@@ -3,6 +3,8 @@ import SwiftUI
 
 @main
 struct MyPluginsApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
     private let pluginsFinder = PluginsFinder(
         fileManager: .default
     )
