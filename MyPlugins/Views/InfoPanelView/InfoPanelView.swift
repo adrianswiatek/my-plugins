@@ -4,8 +4,6 @@ struct InfoPanelView: View {
     @Environment(ViewConfiguration.self) private var viewConfiguration
     @Environment(AudioUnitService.self) private var audioUnitService
 
-    @State private var hoveredUrl: URL?
-
     @Binding private var plugin: Plugin?
 
     init(for plugin: Binding<Plugin?>) {
@@ -33,9 +31,9 @@ struct InfoPanelView: View {
                                 Divider()
                                 pluginManufacturerSection(plugin)
                                 Divider()
-                                TypesSection(plugin, hoveredUrl: $hoveredUrl)
+                                TypesSection(plugin)
                                     .padding(.bottom, 8)
-                                CustomPathsSection(plugin, hoveredUrl: $hoveredUrl)
+                                CustomPathsSection(plugin)
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.vertical, 2)

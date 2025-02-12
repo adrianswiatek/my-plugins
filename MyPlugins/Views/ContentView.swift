@@ -49,7 +49,3 @@ struct ContentView: View {
         pluginNameToFilter.isEmpty || plugin.name.localizedCaseInsensitiveContains(pluginNameToFilter)
     }
 }
-
-#Preview {
-    ContentView()
-}

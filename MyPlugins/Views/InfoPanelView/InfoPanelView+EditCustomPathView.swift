@@ -2,33 +2,36 @@ import SwiftData
 import SwiftUI
 
 extension InfoPanelView {
-    struct AddCustomPathView: View {
+    struct EditCustomPathView: View {
         @Environment(\.modelContext) private var modelContext
 
         @State private var isFileImporterShown: Bool
         @State private var isListOfCustomNamesShown: Bool
+        @State private var isDeletePopoverShown: Bool
 
         @State private var name: String
         @State private var path: String
 
-        @Binding private var isShown: Bool
+        @Binding private var pluginPath: PluginPath?
 
         private var isFormValid: Bool {
-            !name.isEmpty && isPathValid
+            !name.isEmpty && isPathValid && isFormChanged
         }
 
         private var isPathValid: Bool {
             !path.isEmpty && FileManager.default.fileExists(atPath: path)
         }
 
-        private let plugin: Plugin
+        private var isFormChanged: Bool {
+            name != pluginPath?.name || path != pluginPath?.url.path(percentEncoded: false)
+        }
 
-        init(plugin: Plugin, isShown: Binding<Bool>) {
-            self.plugin = plugin
-            self._isShown = isShown
+        init(pluginPath: Binding<PluginPath?>) {
+            self._pluginPath = pluginPath
 
             self.isFileImporterShown = false
             self.isListOfCustomNamesShown = false
+            self.isDeletePopoverShown = false
 
             self.name = ""
             self.path = ""
@@ -36,7 +39,7 @@ extension InfoPanelView {
 
         var body: some View {
             VStack {
-                Text("Add custom path")
+                Text("Edit custom path")
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 Form {
@@ -47,31 +50,19 @@ extension InfoPanelView {
                 .border(.secondary.opacity(0.25), width: 0.75)
                 .padding(EdgeInsets(top: 4, leading: 0, bottom: 8, trailing: 0))
 
-                HStack {
-                    Button(role: .cancel, action: toggle($isShown)) {
-                        Text("Cancel")
-                            .frame(width: 64)
-                    }
-                    .buttonStyle(.bordered)
-
-                    Spacer()
-
-                    Button {
-                        insertCustomPath()
-                        isShown.toggle()
-                    } label: {
-                        Text("Add")
-                            .frame(width: 64)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(!isFormValid)
-                }
+                buttonsSection()
             }
             .padding()
             .frame(width: 450)
             .fileImporter(isPresented: $isFileImporterShown, allowedContentTypes: [.directory]) {
                 if case .success(let url) = $0 {
                     path = url.path(percentEncoded: false)
+                }
+            }
+            .onAppear {
+                if let pluginPath {
+                    name = pluginPath.name
+                    path = pluginPath.url.path(percentEncoded: false)
                 }
             }
         }
@@ -113,16 +104,58 @@ extension InfoPanelView {
             .padding(.top, 2)
         }
 
-        private func insertCustomPath() {
-            withAnimation {
-                modelContext.insert(
-                    PluginPath(
-                        name: name,
-                        url: URL(filePath: path),
-                        pluginId: plugin.id
-                    )
-                )
+        private func buttonsSection() -> some View {
+            HStack {
+                Button(role: .cancel) {
+                    pluginPath = nil
+                } label: {
+                    Text("Cancel")
+                        .frame(width: 64)
+                }
+                .buttonStyle(.bordered)
+
+                Spacer()
+
+                Button(role: .destructive, action: toggle($isDeletePopoverShown)) {
+                    Text("Delete")
+                        .foregroundStyle(Color(.systemRed))
+                        .frame(width: 48)
+                }
+                .buttonStyle(.plain)
+                .deletePopover(isShown: $isDeletePopoverShown, onConfirm: deletePath)
+
+                Button {
+                    updateCustomPath()
+                    pluginPath = nil
+                } label: {
+                    Text("Update")
+                        .frame(width: 64)
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(!isFormValid)
             }
+        }
+
+        private func updateCustomPath() {
+            let hasNameChanged = pluginPath?.name != name
+            if hasNameChanged {
+                pluginPath?.name = name
+            }
+
+            let url = URL(filePath: path)
+            let hasUrlChanged = pluginPath?.url != url
+            if hasUrlChanged {
+                pluginPath?.url = url
+            }
+
+            if hasUrlChanged || hasNameChanged {
+                try? modelContext.save()
+            }
+        }
+
+        private func deletePath() {
+            pluginPath.do(modelContext.delete)
+            pluginPath = nil
         }
     }
 }

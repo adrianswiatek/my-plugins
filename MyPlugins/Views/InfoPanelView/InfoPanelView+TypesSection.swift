@@ -4,13 +4,12 @@ extension InfoPanelView {
     struct TypesSection: View {
         @Environment(ViewConfiguration.self) private var viewConfiguration
 
-        @Binding var hoveredUrl: URL?
+        @State var hoveredUrl: URL?
 
         private let plugin: Plugin
 
-        init(_ plugin: Plugin, hoveredUrl: Binding<URL?>) {
+        init(_ plugin: Plugin) {
             self.plugin = plugin
-            self._hoveredUrl = hoveredUrl
         }
 
         var body: some View {

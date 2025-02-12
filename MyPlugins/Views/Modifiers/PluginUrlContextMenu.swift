@@ -1,6 +1,12 @@
 import SwiftUI
 
-struct PluginUrlContextMenu: ViewModifier {
+extension View {
+    func contextMenuForPluginUrl(_ url: URL) -> some View {
+        ModifiedContent(content: self, modifier: PluginUrlContextMenu(url))
+    }
+}
+
+private struct PluginUrlContextMenu: ViewModifier {
     private let url: URL
 
     init(_ url: URL) {
@@ -21,11 +27,5 @@ struct PluginUrlContextMenu: ViewModifier {
 
     private func showInFinder() {
         NSWorkspace.shared.activateFileViewerSelecting([url])
-    }
-}
-
-extension View {
-    func contextMenuForPluginUrl(_ url: URL) -> some View {
-        ModifiedContent(content: self, modifier: PluginUrlContextMenu(url))
     }
 }
