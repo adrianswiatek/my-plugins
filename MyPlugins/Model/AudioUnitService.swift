@@ -6,19 +6,21 @@ final class AudioUnitService {
     private var allAudioUnitComponents: [AVAudioUnitComponent] = []
 
     init() {
-        Task {
-            let allComponentsDescription = AudioComponentDescription(
-                componentType: 0,
-                componentSubType: 0,
-                componentManufacturer: 0,
-                componentFlags: 0,
-                componentFlagsMask: 0
-            )
+        let allComponentsDescription = AudioComponentDescription(
+            componentType: 0,
+            componentSubType: 0,
+            componentManufacturer: 0,
+            componentFlags: 0,
+            componentFlagsMask: 0
+        )
 
-            allAudioUnitComponents = AVAudioUnitComponentManager.shared().components(
+        let searchAudioUnitComponents = { [weak self] in
+            self?.allAudioUnitComponents = AVAudioUnitComponentManager.shared().components(
                 matching: allComponentsDescription
             )
         }
+
+        Task(operation: searchAudioUnitComponents)
     }
 
     func findManufacturerOfPlugin(_ plugin: Plugin) -> String? {

@@ -1,6 +1,7 @@
 import Foundation
 
 enum PluginType: CaseIterable, CustomStringConvertible {
+    case aax
     case audioUnit
     case clap
     case vst
@@ -8,6 +9,7 @@ enum PluginType: CaseIterable, CustomStringConvertible {
 
     var fileSuffix: String {
         switch self {
+            case .aax: "aaxplugin"
             case .audioUnit: "component"
             case .clap: "clap"
             case .vst: "vst"
@@ -15,18 +17,12 @@ enum PluginType: CaseIterable, CustomStringConvertible {
         }
     }
 
-    var directoryName: String {
-        if case .audioUnit = self {
-            return fileSuffix + "s"
-        }
-        return fileSuffix
-    }
-
     var description: String {
-        if case .audioUnit = self {
-            return "AU"
+        switch self {
+            case .aax: "AAX"
+            case .audioUnit: "AU"
+            case .clap, .vst, .vst3: fileSuffix.uppercased()
         }
-        return fileSuffix.uppercased()
     }
 
     static func fromUrl(_ url: URL) -> PluginType? {

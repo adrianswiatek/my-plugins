@@ -10,7 +10,7 @@ struct MyPluginsApp: App {
     )
 
     private let viewConfiguration = ViewConfiguration(
-        pluginTypes: [.audioUnit, .vst3, .vst, .clap],
+        pluginTypes: [.audioUnit, .vst3, .vst, .aax, .clap],
         listColumnWidth: 48.0,
         sortDirection: .ascending
     )
@@ -21,7 +21,7 @@ struct MyPluginsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .frame(minWidth: 1000, minHeight: 500)
+                .frame(minWidth: 1100, minHeight: 500)
                 .environment(audioUnitService)
                 .environment(commands)
                 .environment(pluginsFinder)
