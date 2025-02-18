@@ -10,7 +10,7 @@ struct MyPluginsApp: App {
     )
 
     private let viewConfiguration = ViewConfiguration(
-        pluginTypes: [.audioUnit, .vst3, .vst, .aax, .clap],
+        pluginTypes: [.aax, .audioUnit, .clap, .vst, .vst3],
         listColumnWidth: 48.0,
         sortDirection: .ascending
     )
