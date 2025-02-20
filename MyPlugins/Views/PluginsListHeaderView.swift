@@ -26,9 +26,19 @@ struct PluginsListHeaderView: View {
                 }
                 .foregroundStyle(.secondary)
             } else {
-                Text("PLUGIN")
-                    .fontWeight(.bold)
-                    .foregroundStyle(.secondary)
+                HStack(spacing: 4) {
+                    Text("PLUGIN")
+                        .fontWeight(.bold)
+                        .foregroundStyle(.secondary)
+
+                    Button(action: onPluginFind) {
+                        Text("Find (⌘+F)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.accessoryBar)
+
+                }
             }
 
             Spacer()
@@ -44,7 +54,9 @@ struct PluginsListHeaderView: View {
             isSearchFieldFocused = false
             return .handled
         }
-        .onAppear(perform: configurePluginFinding)
+        .onAppear {
+            commands.onFindPluginTapped = onPluginFind
+        }
     }
 
     private func buttonForPluginType(_ pluginType: PluginType) -> some View {
@@ -57,12 +69,10 @@ struct PluginsListHeaderView: View {
         .frame(width: viewConfiguration.listColumnWidth)
     }
 
-    private func configurePluginFinding() {
-        commands.onFindPluginTapped = {
-            withAnimation {
-                isSearchFieldVisible = true
-                isSearchFieldFocused = true
-            }
+    private func onPluginFind() {
+        withAnimation {
+            isSearchFieldVisible = true
+            isSearchFieldFocused = true
         }
     }
 }
