@@ -14,13 +14,9 @@ final class AudioUnitService {
             componentFlagsMask: 0
         )
 
-        let searchAudioUnitComponents = { [weak self] in
-            self?.allAudioUnitComponents = AVAudioUnitComponentManager.shared().components(
-                matching: allComponentsDescription
-            )
-        }
-
-        Task(operation: searchAudioUnitComponents)
+        allAudioUnitComponents = AVAudioUnitComponentManager.shared().components(
+            matching: allComponentsDescription
+        )
     }
 
     func findManufacturerOfPlugin(_ plugin: Plugin) -> String? {

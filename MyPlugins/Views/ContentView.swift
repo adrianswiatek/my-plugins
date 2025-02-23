@@ -4,6 +4,7 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(PluginsFinder.self) private var pluginsFinder
+    @Environment(NameFinder.self) private var nameFinder
     @Environment(ViewConfiguration.self) private var viewConfiguration
 
     @State private var plugins: [Plugin] = []
@@ -12,7 +13,9 @@ struct ContentView: View {
     @State private var selectedPlugin: Plugin?
 
     var filteredPlugins: [Plugin] {
-        plugins.filter(canShowPluginBasedOnType).filter(canShowPluginBaseOnName)
+        plugins
+            .filter { canShowPluginBasedOnType($0) }
+            .filter { canShowPluginBasedOnName($0) }
     }
 
     var body: some View {
@@ -45,7 +48,7 @@ struct ContentView: View {
         pluginTypeToFilter.map { plugin.has($0) } ?? true
     }
 
-    private func canShowPluginBaseOnName(_ plugin: Plugin) -> Bool {
-        pluginNameToFilter.isEmpty || plugin.name.localizedCaseInsensitiveContains(pluginNameToFilter)
+    private func canShowPluginBasedOnName(_ plugin: Plugin) -> Bool {
+        pluginNameToFilter.isEmpty || nameFinder.find(text: pluginNameToFilter, in: plugin.name).isFound
     }
 }

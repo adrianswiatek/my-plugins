@@ -9,6 +9,10 @@ extension Optional {
         self ?? []
     }
 
+    func or(default defaultValue: Wrapped) -> Wrapped {
+        self ?? defaultValue
+    }
+
     func `do`(_ action: (Wrapped) throws -> Void) rethrows {
         switch self {
             case .some(let wrapped):

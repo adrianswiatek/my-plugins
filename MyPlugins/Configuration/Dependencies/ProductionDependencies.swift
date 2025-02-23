@@ -1,11 +1,8 @@
 final class ProductionDependencies: Dependencies {
     let audioUnitService = AudioUnitService()
-
     let commands = Commands()
-
-    let pluginsFinder = PluginsFinder(
-        fileManager: .default
-    )
+    let nameFinder = NameFinder()
+    let pluginsFinder = PluginsFinder(fileManager: .default)
 
     let viewConfiguration = ViewConfiguration(
         pluginTypes: [.aax, .audioUnit, .clap, .vst, .vst3],
