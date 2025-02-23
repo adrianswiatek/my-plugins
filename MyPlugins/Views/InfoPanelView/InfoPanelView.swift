@@ -59,7 +59,7 @@ struct InfoPanelView: View {
 
     private func closeButton() -> some View {
         Button {
-            withAnimation { plugin = nil }
+            withAnimation(.easeInOut(duration: 0.1)) { plugin = nil }
         } label: {
             Image(systemName: "xmark")
         }

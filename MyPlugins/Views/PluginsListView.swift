@@ -63,7 +63,7 @@ struct PluginsListView: View {
     }
 
     private func selectPlugin(_ plugin: Plugin) -> () -> Void {
-        { withAnimation { selectedPlugin = plugin } }
+        { withAnimation(.easeInOut(duration: 0.1)) { selectedPlugin = plugin } }
     }
 
     private func opacityForPlugin(_ plugin: Plugin) -> Double {
