@@ -4,7 +4,7 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(PluginsFinder.self) private var pluginsFinder
-    @Environment(NameFinder.self) private var nameFinder
+    @Environment(PluginsFilter.self) private var pluginsFilter
     @Environment(ViewConfiguration.self) private var viewConfiguration
 
     @State private var plugins: [Plugin] = []
@@ -12,10 +12,8 @@ struct ContentView: View {
     @State private var pluginTypeToFilter: PluginType?
     @State private var selectedPlugin: Plugin?
 
-    var filteredPlugins: [Plugin] {
-        plugins
-            .filter { canShowPluginBasedOnType($0) }
-            .filter { canShowPluginBasedOnName($0) }
+    private var filteredPlugins: [PluginsFilter.FilteredPlugin] {
+        pluginsFilter.filter(plugins, byType: pluginTypeToFilter, andQuery: pluginNameToFilter)
     }
 
     var body: some View {
@@ -24,10 +22,10 @@ struct ContentView: View {
                 PluginsListHeaderView(typeToFilter: $pluginTypeToFilter, nameToFilter: $pluginNameToFilter)
                     .padding(EdgeInsets(top: 6, leading: 16, bottom: 3, trailing: 16))
 
-                PluginsListView(plugins: filteredPlugins, selectedPlugin: $selectedPlugin)
+                PluginsListView(plugins: filteredPlugins.map(\.plugin), selectedPlugin: $selectedPlugin)
                     .padding(.top, -6)
 
-                PluginsListFooterView(plugins: filteredPlugins)
+                PluginsListFooterView(plugins: filteredPlugins.map(\.plugin))
             }
 
             Divider()
@@ -42,13 +40,5 @@ struct ContentView: View {
         plugins = pluginsFinder
             .find(forTypes: PluginType.allCases)
             .sorted(by: viewConfiguration.sortPlugins)
-    }
-
-    private func canShowPluginBasedOnType(_ plugin: Plugin) -> Bool {
-        pluginTypeToFilter.map { plugin.has($0) } ?? true
-    }
-
-    private func canShowPluginBasedOnName(_ plugin: Plugin) -> Bool {
-        pluginNameToFilter.isEmpty || nameFinder.find(text: pluginNameToFilter, in: plugin.name).isFound
     }
 }

@@ -1,7 +1,7 @@
 final class ProductionDependencies: Dependencies {
     let audioUnitService = AudioUnitService()
     let commands = Commands()
-    let nameFinder = NameFinder()
+    let pluginsFilter = PluginsFilter()
     let pluginsFinder = PluginsFinder(fileManager: .default)
 
     let viewConfiguration = ViewConfiguration(
