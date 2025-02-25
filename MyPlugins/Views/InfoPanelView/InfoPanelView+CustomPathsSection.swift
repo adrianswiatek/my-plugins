@@ -11,7 +11,7 @@ extension InfoPanelView {
 
         var paths: [PluginPath] {
             pathModels
-                .filter { $0.pluginId == plugin.id }
+                .filter { $0.pluginName == plugin.name }
                 .sorted { $0.name < $1.name }
         }
 

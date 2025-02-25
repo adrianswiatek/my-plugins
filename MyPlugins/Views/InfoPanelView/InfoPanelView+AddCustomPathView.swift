@@ -119,7 +119,7 @@ extension InfoPanelView {
                     PluginPath(
                         name: name,
                         url: URL(filePath: path),
-                        pluginId: plugin.id
+                        pluginName: plugin.name
                     )
                 )
             }

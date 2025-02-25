@@ -12,7 +12,7 @@ struct ContentView: View {
     @State private var pluginTypeToFilter: PluginType?
     @State private var selectedPlugin: Plugin?
 
-    private var filteredPlugins: [PluginsFilter.FilteredPlugin] {
+    private var filteredPlugins: [FilteredPlugin] {
         pluginsFilter.filter(plugins, byType: pluginTypeToFilter, andQuery: pluginNameToFilter)
     }
 
@@ -22,7 +22,7 @@ struct ContentView: View {
                 PluginsListHeaderView(typeToFilter: $pluginTypeToFilter, nameToFilter: $pluginNameToFilter)
                     .padding(EdgeInsets(top: 6, leading: 16, bottom: 3, trailing: 16))
 
-                PluginsListView(plugins: filteredPlugins.map(\.plugin), selectedPlugin: $selectedPlugin)
+                PluginsListView(filteredPlugins: filteredPlugins, selectedPlugin: $selectedPlugin)
                     .padding(.top, -6)
 
                 PluginsListFooterView(plugins: filteredPlugins.map(\.plugin))

@@ -1,12 +1,8 @@
 import Foundation
 
-struct Plugin: Hashable, Identifiable {
+struct Plugin: Hashable {
     let name: String
     let items: [PluginItem]
-
-    var id: String {
-        name
-    }
 
     func has(_ type: PluginType) -> Bool {
         items.contains { $0.type == type }

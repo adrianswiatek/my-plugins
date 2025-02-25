@@ -16,9 +16,8 @@ final class PluginsFilter {
     }
 
     private func pluginOfQuery(_ query: String) -> (Plugin) -> (Plugin, [String.Index])? {
-        let prepare: (String) -> String = { $0.lowercased().replacingOccurrences(of: " ", with: "") }
         return { [weak self] plugin in
-            let foundIndices = self?.findIndices(of: prepare(query), in: prepare(plugin.name)) ?? []
+            let foundIndices = self?.findIndices(of: query.lowercased(), in: plugin.name.lowercased()) ?? []
             return foundIndices.count == query.count ? (plugin, foundIndices) : nil
         }
     }
@@ -36,12 +35,5 @@ final class PluginsFilter {
 
         let charactersToFind = String(text[text.index(after: text.startIndex)...])
         return [indexOfCharacter] + findIndices(of: charactersToFind, in: name, foundIndex: indexOfCharacter)
-    }
-}
-
-extension PluginsFilter {
-    struct FilteredPlugin {
-        let plugin: Plugin
-        let nameIndices: [String.Index]
     }
 }

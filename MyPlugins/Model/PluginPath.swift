@@ -5,11 +5,11 @@ import SwiftData
 final class PluginPath: Identifiable {
     var name: String
     var url: URL
-    var pluginId: String
+    var pluginName: String
 
-    init(name: String, url: URL, pluginId: String) {
+    init(name: String, url: URL, pluginName: String) {
         self.name = name
         self.url = url
-        self.pluginId = pluginId
+        self.pluginName = pluginName
     }
 }

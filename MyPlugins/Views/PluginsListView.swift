@@ -2,31 +2,31 @@ import SwiftUI
 
 struct PluginsListView: View {
     @Environment(ViewConfiguration.self) private var viewConfiguration
-    @State private var pluginIdToHover: String?
+    @State private var filteredPluginToHover: FilteredPlugin?
     @Binding private var selectedPlugin: Plugin?
 
-    private let plugins: [Plugin]
+    private let filteredPlugins: [FilteredPlugin]
 
-    init(plugins: [Plugin], selectedPlugin: Binding<Plugin?>) {
-        self.plugins = plugins
+    init(filteredPlugins: [FilteredPlugin], selectedPlugin: Binding<Plugin?>) {
+        self.filteredPlugins = filteredPlugins
         self._selectedPlugin = selectedPlugin
     }
 
     var body: some View {
-        List(plugins) { plugin in
+        List(filteredPlugins) { filteredPlugin in
             HStack {
-                Text(plugin.name)
+                Text(filteredPlugin.attributedName())
 
                 Spacer()
 
                 ForEach(viewConfiguration.pluginTypes) { pluginType in
-                    viewForPlugin(plugin, ofType: pluginType)
+                    viewForPlugin(filteredPlugin.plugin, ofType: pluginType)
                 }
             }
-            .opacity(opacityForPlugin(plugin))
-            .background(backgroundForPlugin(plugin))
-            .onTapGesture(perform: selectPlugin(plugin))
-            .onHover(perform: highlightPlugin(plugin))
+            .opacity(opacityForPlugin(filteredPlugin))
+            .background(backgroundForPlugin(filteredPlugin))
+            .onTapGesture(perform: selectPlugin(filteredPlugin))
+            .onHover(perform: highlightPlugin(filteredPlugin))
         }
     }
 
@@ -45,36 +45,36 @@ struct PluginsListView: View {
     }
 
     @ViewBuilder
-    private func backgroundForPlugin(_ plugin: Plugin) -> some View {
+    private func backgroundForPlugin(_ filteredPlugin: FilteredPlugin) -> some View {
         let linearGradientForColor: (Color) -> some View = {
             LinearGradient(colors: [$0, .clear], startPoint: .leading, endPoint: .trailing)
                 .padding(.vertical, -4)
         }
 
-        if isPluginHovered(plugin) {
+        if isPluginHovered(filteredPlugin) {
             linearGradientForColor(.pink.opacity(0.35))
-        } else if isPluginSelected(plugin) {
+        } else if isPluginSelected(filteredPlugin) {
             linearGradientForColor(.pink.opacity(0.20))
         }
     }
 
-    private func highlightPlugin(_ plugin: Plugin) -> (Bool) -> Void {
-        { pluginIdToHover = $0 ? plugin.id : nil }
+    private func highlightPlugin(_ filteredPlugin: FilteredPlugin) -> (Bool) -> Void {
+        { filteredPluginToHover = $0 ? filteredPlugin : nil }
     }
 
-    private func selectPlugin(_ plugin: Plugin) -> () -> Void {
-        { withAnimation(.easeInOut(duration: 0.1)) { selectedPlugin = plugin } }
+    private func selectPlugin(_ filteredPlugin: FilteredPlugin) -> () -> Void {
+        { withAnimation(.easeInOut(duration: 0.1)) { selectedPlugin = filteredPlugin.plugin } }
     }
 
-    private func opacityForPlugin(_ plugin: Plugin) -> Double {
-        isPluginHovered(plugin) || isPluginSelected(plugin) ? 1.0 : 0.75
+    private func opacityForPlugin(_ filteredPlugin: FilteredPlugin) -> Double {
+        isPluginHovered(filteredPlugin) || isPluginSelected(filteredPlugin) ? 1.0 : 0.75
     }
 
-    private func isPluginSelected(_ plugin: Plugin) -> Bool {
-        plugin.id == selectedPlugin?.id
+    private func isPluginSelected(_ filteredPlugin: FilteredPlugin) -> Bool {
+        filteredPlugin.plugin == selectedPlugin
     }
 
-    private func isPluginHovered(_ plugin: Plugin) -> Bool {
-        plugin.id == pluginIdToHover
+    private func isPluginHovered(_ filteredPlugin: FilteredPlugin) -> Bool {
+        filteredPlugin == filteredPluginToHover
     }
 }
