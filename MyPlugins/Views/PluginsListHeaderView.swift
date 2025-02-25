@@ -35,9 +35,10 @@ struct PluginsListHeaderView: View {
                         Text("Find (⌘+F)")
                             .font(.caption)
                             .foregroundStyle(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .buttonStyle(.accessoryBar)
-
+                    .buttonStyle(.borderless)
+                    .focusable(false)
                 }
             }
 
