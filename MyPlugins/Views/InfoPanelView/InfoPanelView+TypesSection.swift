@@ -17,7 +17,7 @@ extension InfoPanelView {
                 SectionText(.title("Types"))
 
                 TabView {
-                    ForEach(sortedItems(), id: \.url) { pluginItem in
+                    ForEach(pluginItems(), id: \.url) { pluginItem in
                         Tab {
                             typeTab(for: pluginItem.url)
                         } label: {
@@ -30,7 +30,7 @@ extension InfoPanelView {
             }
         }
 
-        private func sortedItems() -> [PluginItem] {
+        private func pluginItems() -> [PluginItem] {
             viewConfiguration.pluginTypes.compactMap { pluginType in
                 plugin.items.first { $0.type == pluginType }
             }
@@ -39,6 +39,10 @@ extension InfoPanelView {
         private func typeTab(for url: URL) -> some View {
             VStack(alignment: .leading) {
                 pluginVersionSection(for: url)
+                Divider()
+                pluginSizeSection(for: url)
+                Divider()
+                pluginInstallationDateSection(for: url)
                 Divider()
                 pluginPathSection(for: url)
             }
@@ -53,12 +57,54 @@ extension InfoPanelView {
             .padding(4)
         }
 
+        private func pluginSizeSection(for url: URL) -> some View {
+            VStack(alignment: .leading) {
+                SectionText(.title("Size"))
+                SectionText(.value(pluginSize(for: url)))
+            }
+            .padding(4)
+        }
+
+        private func pluginInstallationDateSection(for url: URL) -> some View {
+            VStack(alignment: .leading) {
+                SectionText(.title("Installed on"))
+                SectionText(.value(creationDateOfPlugin(at: url)))
+            }
+            .padding(4)
+        }
+
         private func pluginPathSection(for url: URL) -> some View {
             VStack(alignment: .leading) {
                 SectionText(.title("Path"))
                 SectionText(.url(url, hoveredUrl: $hoveredUrl))
             }
             .padding(4)
+        }
+
+        private func creationDateOfPlugin(at url: URL) -> String {
+            do {
+                let path = url.path(percentEncoded: false)
+                let attributes = try FileManager.default.attributesOfItem(atPath: path)
+                let creationDate = attributes[.creationDate].flatMap { $0 as? Date }
+                return creationDate.map { $0.formatted(date: .abbreviated, time: .shortened) } ?? "n/a"
+            } catch {
+                return "n/a"
+            }
+        }
+
+        private func pluginSize(for url: URL) -> String {
+            let fileUrls = try? FileManager.default.contentsOfDirectory(
+                at: url.appendingPathComponent("Contents/macOS"),
+                includingPropertiesForKeys: nil
+            )
+
+            let totalSize = fileUrls?
+                .map { $0.path(percentEncoded: false) }
+                .compactMap { try? FileManager.default.attributesOfItem(atPath: $0) }
+                .compactMap { $0[.size] as? UInt64 }
+                .reduce(0, +)
+
+            return totalSize.map { $0.formatted(.byteCount(style: .file)) } ?? "n/a"
         }
 
         private func pluginVersions(for url: URL) -> String {
@@ -77,7 +123,7 @@ extension InfoPanelView {
                 case (_, let shortVersion?):
                     return shortVersion
                 case (.none, .none):
-                    return "[n/a]"
+                    return "n/a"
             }
         }
     }
