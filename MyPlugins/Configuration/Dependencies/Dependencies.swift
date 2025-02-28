@@ -5,6 +5,7 @@ protocol Dependencies {
     var commands: Commands { get }
     var pluginsFilter: PluginsFilter { get }
     var pluginsFinder: PluginsFinder { get }
+    var pluginInfoService: PluginInfoService { get }
     var viewConfiguration: ViewConfiguration { get }
 }
 
@@ -15,6 +16,7 @@ extension View {
             .environment(dependencies.commands)
             .environment(dependencies.pluginsFilter)
             .environment(dependencies.pluginsFinder)
+            .environment(dependencies.pluginInfoService)
             .environment(dependencies.viewConfiguration)
     }
 }
