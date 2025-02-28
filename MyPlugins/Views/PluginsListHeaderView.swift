@@ -56,7 +56,7 @@ struct PluginsListHeaderView: View {
             return .handled
         }
         .onAppear {
-            commands.onFindPluginTapped = onPluginFind
+            commands.onFindPluginTap = onPluginFind
         }
     }
 

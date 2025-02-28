@@ -17,8 +17,12 @@ struct MyPluginsApp: App {
         }
         .commands {
             CommandGroup(after: .newItem) {
-                Button("Find plugin", action: dependencies.commands.onFindPluginTapped)
+                Button("Find plugin", action: dependencies.commands.onFindPluginTap)
                     .keyboardShortcut("f", modifiers: .command)
+            }
+            CommandGroup(after: .newItem) {
+                Button("Refresh", action: dependencies.commands.onRefreshTap)
+                    .keyboardShortcut("r", modifiers: .command)
             }
         }
     }

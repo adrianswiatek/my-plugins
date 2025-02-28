@@ -15,11 +15,13 @@ final class PluginsFinder {
     }
 
     private func directoryUrlToPlugin(ofType pluginType: PluginType) -> URL? {
+        let appendingToUrl: (String) -> (URL) -> URL = curry(appending)
+
         return switch pluginType {
             case .aax:
                 url(for: .applicationSupportDirectory).map(appendingToUrl("/Avid/Audio/Plug-Ins/"))
             case .audioUnit:
-                url(for: .libraryDirectory).map(appendingToUrl("/Audio/Plug-Ins/Components"))
+                url(for: .libraryDirectory).map(appendingToUrl("/Audio/Plug-Ins/Components/"))
             case .clap, .vst, .vst3:
                 url(for: .libraryDirectory).map(appendingToUrl("/Audio/Plug-Ins/\(pluginType.fileSuffix)"))
         }
@@ -29,8 +31,8 @@ final class PluginsFinder {
         fileManager.urls(for: directory, in: .localDomainMask).first
     }
 
-    private func appendingToUrl(_ value: String) -> (URL) -> URL {
-        { $0.appendingPathComponent(value) }
+    private func appending(_ value: String, to url: URL) -> URL {
+        url.appendingPathComponent(value)
     }
 
     private func pluginItems(from urls: [URL]) -> [PluginItem] {

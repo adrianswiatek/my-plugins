@@ -3,6 +3,7 @@ import AudioUnit
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(Commands.self) private var commands
     @Environment(PluginsFinder.self) private var pluginsFinder
     @Environment(PluginsFilter.self) private var pluginsFilter
     @Environment(ViewConfiguration.self) private var viewConfiguration
@@ -33,12 +34,16 @@ struct ContentView: View {
             InfoPanelView(for: $selectedPlugin)
                 .padding(EdgeInsets(top: 6, leading: 0, bottom: 20, trailing: 8))
         }
-        .onAppear(perform: findPlugins)
-    }
-
-    private func findPlugins() {
-        plugins = pluginsFinder
-            .find(forTypes: PluginType.allCases)
-            .sorted(by: viewConfiguration.sortPlugins)
+        .onAppear {
+            commands.onRefreshTap = {
+                plugins = pluginsFinder
+                    .find(forTypes: PluginType.allCases)
+                    .sorted(by: viewConfiguration.sortPlugins)
+                pluginNameToFilter = ""
+                pluginTypeToFilter = nil
+                selectedPlugin = nil
+            }
+            commands.onRefreshTap()
+        }
     }
 }
