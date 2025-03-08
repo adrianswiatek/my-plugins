@@ -12,7 +12,7 @@ struct MyPluginsApp: App {
             ContentView()
                 .frame(minWidth: 1100, minHeight: 500)
                 .injectDependencies(dependencies)
-                .modelContainer(for: [PluginPath.self], inMemory: true)
+                .modelContainer(for: [PluginPath.self], inMemory: false)
                 .navigationTitle("My Plugins")
         }
         .commands {

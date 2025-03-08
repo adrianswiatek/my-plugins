@@ -114,15 +114,10 @@ extension InfoPanelView {
         }
 
         private func insertCustomPath() {
-            withAnimation {
-                modelContext.insert(
-                    PluginPath(
-                        name: name,
-                        url: URL(filePath: path),
-                        pluginName: plugin.name
-                    )
-                )
-            }
+            modelContext.insert(
+                PluginPath(name: name, url: URL(filePath: path), pluginName: plugin.name)
+            )
+            try? modelContext.save()
         }
     }
 }
