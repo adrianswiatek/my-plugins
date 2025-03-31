@@ -47,9 +47,7 @@ struct PluginsListHeaderView: View {
             ForEach(viewConfiguration.pluginTypes, content: buttonForPluginType)
         }
         .onChange(of: isSearchFieldFocused) {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                isSearchFieldVisible = isSearchFieldFocused || !nameToFilter.isEmpty
-            }
+            isSearchFieldVisible = isSearchFieldFocused || !nameToFilter.isEmpty
         }
         .onKeyPress(.escape) {
             isSearchFieldFocused = false
@@ -71,9 +69,7 @@ struct PluginsListHeaderView: View {
     }
 
     private func onPluginFind() {
-        withAnimation(.easeInOut(duration: 0.2)) {
-            isSearchFieldVisible = true
-            isSearchFieldFocused = true
-        }
+        isSearchFieldVisible = true
+        isSearchFieldFocused = true
     }
 }
