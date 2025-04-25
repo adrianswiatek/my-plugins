@@ -12,17 +12,20 @@ struct MyPluginsApp: App {
             ContentView()
                 .frame(minWidth: 1100, minHeight: 500)
                 .injectDependencies(dependencies)
-                .modelContainer(for: [PluginPath.self], inMemory: false)
+                .modelContainer(for: PluginPath.self, inMemory: false)
                 .navigationTitle("My Plugins")
         }
         .commands {
-            CommandGroup(after: .newItem) {
+            CommandGroup(replacing: .newItem) {
                 Button("Find plugin", action: dependencies.commands.onFindPluginTap)
                     .keyboardShortcut("f", modifiers: .command)
-            }
-            CommandGroup(after: .newItem) {
                 Button("Refresh", action: dependencies.commands.onRefreshTap)
                     .keyboardShortcut("r", modifiers: .command)
+            }
+            CommandGroup(after: .newItem) {
+                Divider()
+                Button("Export paths", action: dependencies.commands.onExportPathsTap)
+                    .keyboardShortcut("e", modifiers: .command)
             }
         }
     }
